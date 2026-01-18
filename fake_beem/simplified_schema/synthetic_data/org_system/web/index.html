@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Chart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Search -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by username...">
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="orgTabs">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Org Tree Content -->
+        <div class="org-content" id="orgContent">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div class="modal-overlay" id="userModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="user-summary">
+                    <div class="avatar large" id="modalAvatar"></div>
+                    <div class="user-names">
+                        <h2 id="modalName">Name</h2>
+                        <span class="role-badge" id="modalRole">Role</span>
+                    </div>
+                </div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-row">
+                    <span class="label">User ID</span>
+                    <span class="value" id="modalUserId">10001</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Unit</span>
+                    <span class="value" id="modalUnit">Beem</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Department</span>
+                    <span class="value link" id="modalDept">Department Name</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Direct Manager</span>
+                    <span class="value link" id="modalManager">Manager Name</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Job Title</span>
+                    <span class="value" id="modalJob">Engineer</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Phone</span>
+                    <span class="value" id="modalPhone">+86-12345678901 <a href="#" class="show-link">Show ?</a></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Email</span>
+                    <span class="value link" id="modalEmail">user@example.com</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Join Date</span>
+                    <span class="value" id="modalJoinDate">2022-01-01</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Gender</span>
+                    <span class="value" id="modalGender">Unknown</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

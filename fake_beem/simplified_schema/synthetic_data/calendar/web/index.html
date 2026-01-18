@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Events</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Calendar System</h1>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar-container">
+            <input type="text" id="searchInput" placeholder="Search user (organizer or participant)...">
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="orgTabs">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Content -->
+        <div class="content" id="eventList">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
+    <!-- Event Detail Modal -->
+    <div class="modal-overlay" id="eventModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modalSubject">Subject</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-row">
+                    <span class="label">Time</span>
+                    <span class="value" id="modalTime"></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Organizer</span>
+                    <span class="value" id="modalOrganizer"></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Participants</span>
+                    <div class="participants-list" id="modalParticipants">
+                        <!-- List -->
+                    </div>
+                </div>
+                <div class="info-row">
+                    <span class="label">Event ID</span>
+                    <span class="value small-text" id="modalId"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

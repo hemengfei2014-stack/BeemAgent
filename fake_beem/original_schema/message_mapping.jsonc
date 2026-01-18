@@ -1,0 +1,209 @@
+{
+  "search_messages_index": {
+    "mappings": {
+      // ⚠️ 严格模式：禁止自动创建未定义的字段，防止意外写入脏数据
+      "dynamic": "strict",
+      "properties": {
+
+        // ========== 元信息字段 ==========
+        "_class": {
+          // Spring Data Elasticsearch 常用字段，用于反序列化时识别 Java 类型
+          "type": "text",
+          "fields": {
+            // 提供 .keyword 子字段，用于精确匹配（如按类名过滤）
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256  // 超过 256 字符的值不索引到 keyword 字段，防内存溢出
+            }
+          }
+        },
+
+        // ========== 业务核心字段 ==========
+        "conversationType": {
+          // 会话类型：1=单聊，3=群聊（使用 integer 节省空间，且值固定）
+          "type": "integer"
+        },
+        "delUsers": {
+          // 已删除该消息的用户 ID 列表（每个 ID 为 keyword，支持精确匹配和 terms 查询）
+          "type": "keyword"
+        },
+        "docIds": {
+          // 关联的文档 ID 列表（如附件、引用文件等），keyword 类型便于精确查询
+          "type": "keyword"
+        },
+        "from": {
+          // 消息发送者用户 ID（keyword，用于精确匹配、过滤、聚合）
+          "type": "keyword"
+        },
+        "isRichText": {
+          // 是否为富文本消息（true/false），boolean 类型高效存储
+          "type": "boolean"
+        },
+
+        // ========== 多语言全文搜索字段：文档标题 ==========
+        "linkTitles": {
+          // 文档标题列表，主分析器使用中文最大粒度分词（适合召回）
+          "type": "text",
+          "analyzer": "cn_max_word",  // 自定义中文分词器（如 IK 的 max-word 模式）
+          "index_options": "offsets", // 存储 term 的字符偏移量，用于高亮
+          "term_vector": "with_positions_offsets", // 存储位置和偏移，支持高亮和短语查询
+
+          // 多字段（multi-fields）：为不同语言/场景提供独立索引
+          "fields": {
+            "ar": {
+              // 阿拉伯语文本分析
+              "type": "text",
+              "analyzer": "arabic",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets"
+            },
+            "char": {
+              // 英文字符级分析器（可能用于模糊匹配或 ngram）
+              "type": "text",
+              "analyzer": "char_english_analyzer",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets"
+            },
+            "ik": {
+              // 注意：此处 analyzer 名为 word_english_analyzer，但字段名是 ik，
+              // 可能是命名错误，实际应为中文 IK 分词器（需确认配置）
+              "type": "text",
+              "analyzer": "word_english_analyzer",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets"
+            },
+            "search": {
+              // 专用于搜索的分析器（可能包含同义词、停用词优化等）
+              "type": "text",
+              "analyzer": "search_analyzer",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets"
+            }
+          }
+        },
+
+        // ========== 链接字段 ==========
+        "links": {
+          // 存储消息中的链接（如 URL）。注意：通常 URL 应设为 keyword，
+          // 此处用 text + char analyzer 可能是为了支持部分匹配，但需谨慎评估
+          "type": "text",
+          "analyzer": "char_english_analyzer",
+          "index_options": "offsets",
+          "term_vector": "with_positions_offsets"
+        },
+
+        // ========== 提及（@）用户 ==========
+        "mentionUserIds": {
+          // 被 @ 的用户 ID 列表，keyword 类型支持高效精确查询
+          "type": "keyword"
+        },
+
+        // ========== 嵌套文档结构 ==========
+        "messageDocs": {
+          // 使用 nested 类型，确保每个文档对象独立索引（避免扁平化导致逻辑错误）
+          "type": "nested",
+          "properties": {
+            "docId": {
+              // 文档唯一标识
+              "type": "keyword"
+            },
+            "docLink": {
+              // 文档链接（同 links 字段，使用 char analyzer）
+              "type": "text",
+              "analyzer": "char_english_analyzer",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets"
+            },
+            "docLinkTitle": {
+              // 文档标题，结构与 linkTitles 完全一致，支持多语言搜索
+              "type": "text",
+              "analyzer": "cn_max_word",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets",
+              "fields": {
+                "ar": { "type": "text", "analyzer": "arabic", "index_options": "offsets", "term_vector": "with_positions_offsets" },
+                "char": { "type": "text", "analyzer": "char_english_analyzer", "index_options": "offsets", "term_vector": "with_positions_offsets" },
+                "ik": { "type": "text", "analyzer": "word_english_analyzer", "index_options": "offsets", "term_vector": "with_positions_offsets" },
+                "search": { "type": "text", "analyzer": "search_analyzer", "index_options": "offsets", "term_vector": "with_positions_offsets" }
+              }
+            },
+            "docStatus": {
+              // 文档状态（如 0=正常, 1=已删除），整数类型节省空间
+              "type": "integer"
+            }
+          }
+        },
+
+        // ========== 消息标识 ==========
+        "messageId": {
+          // 消息全局唯一 ID（如 UUID 或雪花 ID），必须 keyword
+          "type": "keyword"
+        },
+        "objectName": {
+          // 消息类型标识（如 "RC:TxtMsg", "RC:ImgMsg"），用于区分消息格式
+          "type": "keyword"
+        },
+        "orgId": {
+          // 组织/企业 ID，用于多租户隔离
+          "type": "keyword"
+        },
+
+        // ========== 内容存储字段 ==========
+        "searchContentJson": {
+          // 原始消息内容的完整 JSON 字符串（如富文本结构）
+          // index: false 表示不建立倒排索引，不可搜索，仅用于存储或返回
+          "type": "text",
+          "index": false
+        },
+
+        // ========== 核心全文搜索字段 ==========
+        "searchText": {
+          // 消息正文文本，主分析器为中文分词
+          "type": "text",
+          "analyzer": "cn_max_word",
+          "index_options": "offsets",
+          "term_vector": "with_positions_offsets",
+          // 多语言/多策略子字段，与 linkTitles 一致
+          "fields": {
+            "ar": { "type": "text", "analyzer": "arabic", "index_options": "offsets", "term_vector": "with_positions_offsets" },
+            "char": { "type": "text", "analyzer": "char_english_analyzer", "index_options": "offsets", "term_vector": "with_positions_offsets" },
+            "ik": { "type": "text", "analyzer": "word_english_analyzer", "index_options": "offsets", "term_vector": "with_positions_offsets" },
+            "search": { "type": "text", "analyzer": "search_analyzer", "index_options": "offsets", "term_vector": "with_positions_offsets" }
+          }
+        },
+
+        // ========== 时间与会话 ==========
+        "sendTime": {
+          // 消息发送时间戳（单位：毫秒或秒，需与业务一致）
+          // 注：建议使用 date 类型更语义化，但 long 也可接受
+          "type": "long"
+        },
+        "sessionId": {
+          // 会话唯一 ID（单聊：userA_userB；群聊：group_123）
+          "type": "keyword"
+        },
+
+        // ========== 展示文本 ==========
+        "showText": {
+          // 用于前端展示的简化文本（如截断后的预览）
+          "type": "text",
+          "fields": {
+            // 提供 keyword 子字段，可用于精确匹配短文本（如“系统通知”）
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+
+        // ========== 接收方 ==========
+        "target": {
+          // 接收者 ID：
+          // - 单聊：目标用户 ID
+          // - 群聊：可能为空或群 ID（需结合 conversationType 判断）
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}

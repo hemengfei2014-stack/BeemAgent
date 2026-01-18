@@ -1,0 +1,48 @@
+=== Performance Report (Processes: 1) ===
+Model: gpt-oss-120b
+Total Requests: 24
+Successful Requests: 24
+Total Time: 6.54 s
+Total Output Tokens: 3072
+Throughput (req/s): 3.67
+Throughput (tok/s): 469.75
+Average Latency: 1.09 s
+P95 Latency: 1.10 s
+============================================
+
+=== Performance Report (Processes: 2) ===
+Model: gpt-oss-120b
+Total Requests: 24
+Successful Requests: 24
+Total Time: 3.84 s
+Total Output Tokens: 3072
+Throughput (req/s): 6.25
+Throughput (tok/s): 799.55
+Average Latency: 1.28 s
+P95 Latency: 1.29 s
+============================================
+
+=== Performance Report (Processes: 4) ===
+Model: gpt-oss-120b
+Total Requests: 24
+Successful Requests: 24
+Total Time: 2.98 s
+Total Output Tokens: 3072
+Throughput (req/s): 8.04
+Throughput (tok/s): 1029.73
+Average Latency: 1.55 s
+P95 Latency: 1.69 s
+============================================
+
+=== Performance Report (Processes: 8) ===
+Model: gpt-oss-120b
+Total Requests: 24
+Successful Requests: 24
+Total Time: 2.07 s
+Total Output Tokens: 3072
+Throughput (req/s): 11.61
+Throughput (tok/s): 1486.42
+Average Latency: 2.05 s
+P95 Latency: 2.06 s
+============================================
+

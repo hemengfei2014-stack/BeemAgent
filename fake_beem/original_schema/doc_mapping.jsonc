@@ -1,0 +1,160 @@
+{
+  "search_docs_index": {
+    "mappings": {
+      // 禁用动态映射，防止意外插入未定义字段
+      "dynamic": "strict",
+      "properties": {
+        // 文档访问控制列表（Access Control List），用于权限校验
+        // 存储具有访问权限的用户/角色/组标识（如 user_123, role_admin）
+        "acls": {
+          "type": "keyword"
+        },
+        // 文档创建时间戳（毫秒级 Unix 时间戳）
+        "create_time": {
+          "type": "long"
+        },
+        // 文档创建者唯一标识（如用户ID）
+        "creator": {
+          "type": "keyword"
+        },
+        // 文档业务类型（例如：doc、sheet、slide、pdf 等）
+        "ctype": {
+          "type": "keyword"
+        },
+        // 文档在业务系统中的唯一标识符（非 Elasticsearch 自动生成的 _id）
+        "doc_id": {
+          "type": "keyword"
+        },
+        // 文档事件发生时间（如上传、编辑等操作的时间，毫秒级 Unix 时间戳）
+        "event_time": {
+          "type": "long"
+        },
+        // 外部协作组织 ID 列表（用于跨组织共享场景，多个 ID 以数组形式存储）
+        "external_co_org_ids": {
+          "type": "keyword"
+        },
+        // 外部标志位（整型标识，可能用于区分内部/外部文档，具体业务含义由应用层定义）
+        "external_flag": {
+          "type": "integer"
+        },
+        // 标记文档是否已被放入回收站（true 表示已删除/回收，false 表示正常）
+        "is_trashed": {
+          "type": "boolean"
+        },
+        // 文档的 MIME 类型（如 application/pdf, text/plain, image/jpeg 等）
+        "mime_type": {
+          "type": "keyword"
+        },
+        // 文档正文内容（主文本字段，支持全文检索）
+        // 使用 cn_max_word 分词器（适用于中文最大粒度分词）
+        // 同时开启 offsets（用于高亮）和 term_vector（用于短语查询、高亮等）
+        "note": {
+          "type": "text",
+          "fields": {
+            // 阿拉伯语文本子字段，使用 arabic 分析器
+            "ar": {
+              "type": "text",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets",
+              "analyzer": "arabic"
+            },
+            // 英文字符级子字段（可能用于拼写纠错或模糊匹配），使用 char_english_analyzer
+            "char": {
+              "type": "text",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets",
+              "analyzer": "char_english_analyzer"
+            },
+            // 英文单词级子字段（可能用于标准英文分词），使用 word_english_analyzer
+            "ik": {
+              "type": "text",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets",
+              "analyzer": "word_english_analyzer"
+            },
+            // 通用搜索优化子字段，使用 search_analyzer（可能包含同义词、停用词等优化）
+            "search": {
+              "type": "text",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets",
+              "analyzer": "search_analyzer"
+            }
+          },
+          "index_options": "offsets",
+          "term_vector": "with_positions_offsets",
+          "analyzer": "cn_max_word"
+        },
+        // 所属组织 ID（Organization ID），用于多租户隔离
+        "oid": {
+          "type": "keyword"
+        },
+        // 文档所有者唯一标识（如用户ID）
+        "owner": {
+          "type": "keyword"
+        },
+        // 父级文档或文件夹的引用 ID（用于构建树形结构，如目录层级）
+        "parent_ref": {
+          "type": "keyword"
+        },
+        // 父级文档或文件夹的标题（便于在搜索结果中展示路径信息）
+        "parent_title": {
+          "type": "keyword"
+        },
+        // 共享状态标志（整型，如 0=私有，1=内部共享，2=公开链接等，具体由业务定义）
+        "share_flag": {
+          "type": "integer"
+        },
+        // 公开分享链接（当 share_flag 允许时生成的 URL）
+        "share_url": {
+          "type": "keyword"
+        },
+        // 文档标题（主标题字段，支持全文检索）
+        // 结构与 note 字段一致，同样支持多语言/多分析器子字段
+        "title": {
+          "type": "text",
+          "fields": {
+            // 阿拉伯语标题
+            "ar": {
+              "type": "text",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets",
+              "analyzer": "arabic"
+            },
+            // 英文字符级标题
+            "char": {
+              "type": "text",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets",
+              "analyzer": "char_english_analyzer"
+            },
+            // 英文单词级标题
+            "ik": {
+              "type": "text",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets",
+              "analyzer": "word_english_analyzer"
+            },
+            // 搜索优化标题
+            "search": {
+              "type": "text",
+              "index_options": "offsets",
+              "term_vector": "with_positions_offsets",
+              "analyzer": "search_analyzer"
+            }
+          },
+          "index_options": "offsets",
+          "term_vector": "with_positions_offsets",
+          "analyzer": "cn_max_word"
+        },
+        // 最后更新者唯一标识（如用户ID）
+        "update_by": {
+          "type": "keyword"
+        },
+        // 文档最后更新时间戳（毫秒级 Unix 时间戳）
+        "update_time": {
+          "type": "long"
+        }
+      }
+    }
+  }
+}

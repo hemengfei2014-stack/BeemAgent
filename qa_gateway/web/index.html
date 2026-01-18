@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FakeBeem</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <div id="root">
+      <div id="loginView" class="view">
+        <div class="loginCard">
+          <div class="logo">FakeBeem</div>
+          <div class="field">
+            <label>组织名称</label>
+            <input id="orgNameInput" placeholder="例如：Jaco" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label>用户 ID</label>
+            <input id="userIdInput" placeholder="例如：10008" autocomplete="off" />
+          </div>
+          <button id="loginBtn" class="primary">登录</button>
+          <div id="loginError" class="error"></div>
+        </div>
+      </div>
+
+      <div id="chatView" class="view hidden">
+        <div class="sidebar">
+          <div class="sidebarHeader">
+            <button id="newChatBtn" class="secondary full">新建会话</button>
+          </div>
+          <div id="conversationList" class="conversationList"></div>
+          <div class="sidebarFooter">
+            <div id="meLabel" class="meLabel"></div>
+            <button id="logoutBtn" class="secondary full">退出</button>
+          </div>
+        </div>
+
+        <div class="main">
+          <div class="topbar">
+            <div id="conversationTitle" class="conversationTitle">新会话</div>
+          </div>
+
+          <div id="messageList" class="messageList"></div>
+
+          <div class="composer">
+            <textarea id="promptInput" rows="1" placeholder="请输入问题..." ></textarea>
+            <div class="composerActions">
+              <button id="stopBtn" class="secondary" disabled>停止</button>
+              <button id="sendBtn" class="primary">发送</button>
+            </div>
+            <div id="sendError" class="error"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/app.js"></script>
+  </body>
+</html>
+

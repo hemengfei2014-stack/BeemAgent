@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doc System Viewer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Doc System Viewer</h1>
+            <div id="orgTabs" class="tabs"></div>
+        </header>
+        
+        <main>
+            <div class="sidebar">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search user (owner or accessor)...">
+                </div>
+                <div id="docList" class="doc-list">
+                    <!-- Docs will be rendered here -->
+                </div>
+            </div>
+            
+            <div id="docDetail" class="doc-detail">
+                <div class="empty-state">Select a document to view details</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
