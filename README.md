@@ -2,6 +2,11 @@
 
 BeemAgent 用于构建与验证一个“企业内部问答 Agent”的最小闭环：覆盖组织架构、IM 聊天、文档系统、日历/日程等企业业务数据，通过私有化 OpenAI 兼容模型 + 工具调用（Tool Calling）在可追溯证据的基础上回答问题，并实现企业场景需要的鉴权、会话管理与隔离策略。
 
+## 效果截图
+
+![QA Gateway Demo 1](./assets/qa_gateway_demo_1.png)
+![QA Gateway Demo 2](./assets/qa_gateway_demo_2.png)
+
 ## 核心能力
 
 - 合成企业业务数据与 Schema（组织/IM/文档/日历），用于开发与联调
