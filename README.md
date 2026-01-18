@@ -20,6 +20,11 @@ BeemAgent 用于构建与验证一个“企业内部问答 Agent”的最小闭�
 
 第一步：按业务规则合成企业应用的业务数据与 Schema（组织架构、IM、文档、日历），用于构建可查询的数据底座。
 
+- 可视化示例：
+  - ![Organization](./assets/fake_beem_org.png)
+  - ![IM](./assets/fake_beem_im.png)
+  - ![Doc](./assets/fake_beem_doc.png)
+  - ![Calendar](./assets/fake_beem_calendar.png)
 - 入口说明：[fake_beem/README.md](./fake_beem/README.md)
 - `original_schema/`：更贴近真实系统的底层结构（如 ES mapping、完整表结构）
 - `simplified_schema/`：抽象后的核心业务 Schema，以及对应的 synthetic data 生成与可视化示例
