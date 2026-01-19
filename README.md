@@ -50,6 +50,7 @@ BeemAgent 用于构建与验证一个“企业内部问答 Agent”的最小闭�
 Agent 核心网关：负责鉴权、会话管理与控制流程，并以工具查询/计算的方式访问企业数据（严格组织隔离与判权），提供 Web 前端与 OpenAI 风格接口。
 
 - 入口说明：[qa_gateway/README.md](./qa_gateway/README.md)
+- Enterprise tools 抽取与说明：[qa_gateway/enterprise_tools.md](./qa_gateway/enterprise_tools.md)
 - 核心功能：
   - 登录后多轮会话（类似 ChatGPT）
   - 流式输出（SSE），支持中断
