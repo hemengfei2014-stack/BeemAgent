@@ -108,6 +108,14 @@ async def request_log_middleware(request: Request, call_next):
     return response
 
 
+@app.middleware("http")
+async def disable_cache_for_static(request: Request, call_next):
+    response = await call_next(request)
+    if request.method == "GET" and (request.url.path == "/" or request.url.path.startswith("/assets/")):
+        response.headers["Cache-Control"] = "no-store"
+    return response
+
+
 def now_ms() -> int:
     return int(time.time() * 1000)
 
@@ -1446,4 +1454,4 @@ app.mount("/assets", StaticFiles(directory=WEB_DIR), name="assets")
 
 @app.get("/")
 def index() -> Response:
-    return FileResponse(WEB_DIR / "index.html")
+    return FileResponse(WEB_DIR / "index.html", headers={"Cache-Control": "no-store"})

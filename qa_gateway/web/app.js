@@ -26,6 +26,20 @@ let state = {
   abortController: null,
 };
 
+function generateId() {
+  if (globalThis.crypto && typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  const bytes = new Uint8Array(16);
+  if (globalThis.crypto && typeof crypto.getRandomValues === "function") {
+    crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < bytes.length; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+  }
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0"));
+  return `${hex[0]}${hex[1]}${hex[2]}${hex[3]}-${hex[4]}${hex[5]}-${hex[6]}${hex[7]}-${hex[8]}${hex[9]}-${hex[10]}${hex[11]}${hex[12]}${hex[13]}${hex[14]}${hex[15]}`;
+}
+
 function clearChatUI() {
   conversationList.innerHTML = "";
   conversationTitle.textContent = "新会话";
@@ -201,14 +215,14 @@ async function sendMessage() {
   try {
     const convId = await ensureConversation();
 
-    state.activeMessages.push({ id: crypto.randomUUID(), role: "user", content: text });
+    state.activeMessages.push({ id: generateId(), role: "user", content: text });
     renderMessages();
     promptInput.value = "";
 
     const controller = new AbortController();
     state.abortController = controller;
 
-    const assistantMsgId = crypto.randomUUID();
+    const assistantMsgId = generateId();
     appendOrUpdateAssistantMessage(assistantMsgId, "", "");
 
     const body = {
